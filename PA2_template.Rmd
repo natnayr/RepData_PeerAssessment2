@@ -6,7 +6,7 @@ output:
 ---
 
 ### Introduction
-Storms and other severe weather events can cause both public health and economic problems for communities and municipalities. Many severe events can result in fatalities, injuries, and property damage, and preventing such outcomes to the extent possible is a key concern. This project involves exploring the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. This database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage.
+Storms and other severe weather events can cause both public health and economic problems for communities and municipalities. Many severe events can result in fatalities, injuries,  property damage and preventing such outcomes to the extent possible is a key concern. This project involves exploring the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. This database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries and property damage.
 
 
 #### Settings
@@ -35,14 +35,14 @@ head(raw_data, 3)
 As we look at the raw data, it shows the it has `r nrow(raw_data)` rows and `r ncol(raw_data)` variables.
 
 ##### Exploring the data
-Peak into the data firstly by formating the BGN_DATE into a numeric YEAR format, this follows by plotting it as a histogram with the ggplot2 package.
+Peak into the data firstly by formating the BGN_DATE into a numeric year format, this follows by plotting it as a histogram with the ggplot2 package.
 ```{r histogram_plot}
 raw_data$year <- as.numeric(format(as.Date(raw_data$BGN_DATE, format='%m/%d/%Y %H:%M:%S'), '%Y'))
 ggplot(raw_data, aes(x=year)) + labs(title="Storm Data Record Density by Year", x="Year",y="No. of records") + geom_histogram(binwidth=0.5, color="black", fill="black") + scale_x_continuous(breaks = seq(from=1950, to=2015, by=5))
 ```
 
 ##### Cleaning Data
-Here we clean the data to subset variables that are relavant to the questions of Health and Economy.
+Here we clean the data to subset variables that are relevant to the questions of Health and Economy.
 
 ```{r clean_data}
 clean_data <- raw_data[,c("EVTYPE","FATALITIES","INJURIES","PROPDMG","PROPDMGEXP","CROPDMG","CROPDMGEXP")]
@@ -87,7 +87,7 @@ convert <- function(fieldName, dataset=clean_data){
 
 ### Question 1 - EVTYPE Impact on Population Health?
 
-Using the helper functions above, variables which impact on health are mainly the mortality and injury rates that their totals for every environment/disaster. Thus using the variables of FATALITIES and INJURIES from the dataset
+Using the helper functions above, variables which impact on health are mainly the mortality rates and injury rates that their totals for every environment/disaster. Thus using the variables of FATALITIES and INJURIES from the dataset
 
 ```{r health_analysis}
 fatalities <- sorter("FATALITIES", dataset=clean_data, head_n=15)
@@ -106,7 +106,7 @@ Base on the bar plots, **TORNADOES** are the largest contributer in terms of fat
 
 ### Question 2 - EVTYPE Impact on Population Economy?
 
-For economical analysis, the variables of PROPDMG & CROPDMG are used along with their exponents PROPDMGEXP & CROPDMGEXP are used to measure. Data transformation is required for the exponent (DMGEXP) to be multiplied (e.g 10^n) to the base number (DMG) to get the actual estimate of cost incured. Secondly, conversion of the exponent figures was made with the convert helper function.
+For economical analysis, the variables of PROPDMG & CROPDMG are used along with their exponents PROPDMGEXP & CROPDMGEXP are used to measure. Data transformation is required for the exponent (DMGEXP) to be multiplied (e.g 10^n) to the base number (DMG) to get the actual estimate of cost incurred. Secondly, conversion of the exponent figures was made with the convert helper function.
 
 ```{r economy_analysis}
 suppressWarnings(property <- convert(fieldName="PROPDMGEXP", dataset=clean_data))
